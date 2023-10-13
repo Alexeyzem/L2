@@ -1,6 +1,6 @@
 module basic_task
 
-go 1.18
+go 1.21.3
 
 require github.com/beevik/ntp v1.3.0
 
