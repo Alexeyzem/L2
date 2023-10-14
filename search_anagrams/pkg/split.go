@@ -12,9 +12,11 @@ func Split(StrSl []string) map[string][]string {
 	out := make(map[string][]string)
 	for _, v := range StrSl {
 		flag := false
-		for k, _ := range out {
+		v = strings.ToLower(v)
+		for k := range out {
+			k = strings.ToLower(k)
 			if check(v, k) {
-				out[strings.ToLower(k)] = append(out[strings.ToLower(k)], v)
+				out[k] = append(out[k], v)
 				flag = true
 			}
 		}
@@ -31,15 +33,13 @@ func check(first, second string) bool {
 	if len(second) != len(first) {
 		return false
 	}
-	firstSl, secondSl := []rune(strings.ToLower(first)), []rune(strings.ToLower(second))
-	sort.Slice(firstSl, func(i, j int) bool {
-		return firstSl[i] < firstSl[j]
-	})
-	sort.Slice(secondSl, func(i, j int) bool {
-		return secondSl[i] < secondSl[j]
-	})
-	for i := range firstSl {
-		if firstSl[i] != secondSl[i] {
+	m := make(map[rune]int)
+	for _, r := range first {
+		m[r]++
+	}
+	for _, r := range second {
+		m[r]--
+		if m[r] < 0 {
 			return false
 		}
 	}
@@ -60,11 +60,11 @@ func combineOtherWords(m map[string][]string) {
 }
 func sortAndDelete(m map[string][]string) {
 	for k, v := range m {
-		sort.Strings(v)
 		if len(v) == 1 {
 			delete(m, k)
 			continue
 		}
+		sort.Strings(v)
 		last := strings.ToLower(v[0])
 		now := []string{last}
 		for i := 1; i < len(v); i++ {
